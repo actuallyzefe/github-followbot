@@ -14,6 +14,24 @@ const findFollowings = async (username) => {
     .then((data) => data.data);
 
   const dom = new JSDOM(html);
+  const nextLink = dom.window.document.querySelector(".pagination").lastChild;
+
+  if (nextLink) {
+    const url = nextLink.href;
+    try {
+      console.log(url);
+      const html2 = await axios.get(url).then((data) => data.data);
+      const dom2 = new JSDOM(html2);
+      let mainClass = dom2.window.document.getElementsByClassName(
+        "Link--secondary pl-1"
+      );
+      for (let i = 0; i < mainClass.length; i++) {
+        follower_usernames.push(mainClass[i].textContent);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
   let mainClass = dom.window.document.getElementsByClassName(
     "Link--secondary pl-1"
   );
@@ -41,7 +59,7 @@ const findAlreadyfollowings = async () => {
 };
 
 const followUsers = async () => {
-  findFollowings("--username--here--")
+  findFollowings("--username-here--")
     .then((response) => {
       console.log(response);
     })
@@ -106,6 +124,7 @@ followUsers();
         i++;
         continue;
       }
+
       await driver.get(`https://github.com/${follower_usernames[i]}`);
       await driver.findElement(By.className("btn btn-block")).click();
     }
