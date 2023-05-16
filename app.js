@@ -38,6 +38,7 @@ const followUsers = async () => {
 
   for (let i = 0; i < follower_usernames; i++) {
     let user = follower_usernames[i];
+    if (user === process.env.nickname) i++;
     await axios
       .get(`https://github.com/${user}?tab=followers`)
       .then((data) => data.data);
