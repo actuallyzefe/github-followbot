@@ -28,7 +28,7 @@ const findFollowings = async (username) => {
 };
 
 const followUsers = async () => {
-  findFollowings("--username-here--")
+  findFollowings("--username-here")
     .then((response) => {
       console.log(response);
     })
@@ -59,11 +59,8 @@ followUsers();
     .build();
 
   try {
-    await driver.get("https://www.google.com/");
+    await driver.get("https://www.github.com/");
 
-    await driver.findElement(By.name("q")).sendKeys("github", Key.RETURN);
-
-    await driver.findElement(By.className("LC20lb MBeuO DKV0Md")).click();
     await driver
       .findElement(
         By.className(
@@ -84,19 +81,9 @@ followUsers();
 
     for (let i = 0; i < follower_usernames.length; i++) {
       await driver.get(`https://github.com/${follower_usernames[i]}`);
-      const unfollowButton = await driver.findElement(
-        By.css("input[name='commit'][value='Unfollow']")
-      );
-
-      if (unfollowButton) {
-        i++;
-        continue;
-      }
-
       await driver.findElement(By.className("btn btn-block")).click();
     }
   } finally {
-    await driver.quit();
     console.log("ENDED SESSION");
   }
 })();
