@@ -2,12 +2,8 @@ import { Builder, By, Key, until } from "selenium-webdriver";
 import chrome from "selenium-webdriver/chrome.js";
 import dotenv from "dotenv";
 dotenv.config();
-import express from "express";
 import axios from "axios";
 import { JSDOM } from "jsdom";
-
-const app = express();
-app.use(express.json());
 
 let follower_usernames = [];
 let alreadyFollowing = [];
