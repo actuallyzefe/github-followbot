@@ -38,7 +38,10 @@ const followUsers = async () => {
 
   for (let i = 0; i < follower_usernames; i++) {
     let user = follower_usernames[i];
-    if (user === process.env.nickname) i++;
+    if (user === process.env.nickname) {
+      i++;
+      continue;
+    }
     await axios
       .get(`https://github.com/${user}?tab=followers`)
       .then((data) => data.data);
@@ -84,7 +87,6 @@ followUsers();
       await driver.findElement(By.className("btn btn-block")).click();
     }
   } finally {
-    await driver.quit();
     console.log("ENDED SESSION");
   }
 })();
