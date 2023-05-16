@@ -2,7 +2,6 @@ import { Builder, By, Key, until } from "selenium-webdriver";
 import chrome from "selenium-webdriver/chrome.js";
 import dotenv from "dotenv";
 dotenv.config();
-
 import express from "express";
 import axios from "axios";
 import { JSDOM } from "jsdom";
@@ -11,6 +10,8 @@ const app = express();
 app.use(express.json());
 
 let follower_usernames = [];
+let alreadyFollowing = [];
+
 const findFollowings = async (username) => {
   const html = await axios
     .get(`https://github.com/${username}?tab=followers`)
@@ -27,8 +28,24 @@ const findFollowings = async (username) => {
   return follower_usernames;
 };
 
+const findAlreadyfollowings = async () => {
+  const html = await axios
+    .get(`https://github.com/${process.env.nickname}?tab=following`)
+    .then((data) => data.data);
+
+  const dom = new JSDOM(html);
+  let mainClass = dom.window.document.getElementsByClassName(
+    "Link--secondary pl-1"
+  );
+
+  for (let i = 0; i < mainClass.length; i++) {
+    alreadyFollowing.push(mainClass[i].textContent);
+  }
+  return alreadyFollowing;
+};
+
 const followUsers = async () => {
-  findFollowings("--username-here")
+  findFollowings("emirdmrgzr")
     .then((response) => {
       console.log(response);
     })
@@ -36,7 +53,8 @@ const followUsers = async () => {
       console.log(error);
     });
 
-  for (let i = 0; i < follower_usernames; i++) {
+  // CHECKING IF THE USER IS THE OWNER OF THE ACCOUNT
+  for (let i = 0; i < follower_usernames.length; i++) {
     let user = follower_usernames[i];
     if (user === process.env.nickname) {
       i++;
@@ -59,6 +77,14 @@ followUsers();
     .build();
 
   try {
+    findAlreadyfollowings()
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
     await driver.get("https://www.github.com/");
 
     await driver
@@ -80,6 +106,10 @@ followUsers();
       .sendKeys(process.env.password, Key.RETURN);
 
     for (let i = 0; i < follower_usernames.length; i++) {
+      if (alreadyFollowing.includes(follower_usernames[i])) {
+        i++;
+        continue;
+      }
       await driver.get(`https://github.com/${follower_usernames[i]}`);
       await driver.findElement(By.className("btn btn-block")).click();
     }
