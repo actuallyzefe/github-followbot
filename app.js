@@ -41,7 +41,7 @@ const findAlreadyfollowings = async () => {
 };
 
 const followUsers = async () => {
-  findFollowings("emirdmrgzr")
+  findFollowings("--username--here--")
     .then((response) => {
       console.log(response);
     })
