@@ -87,6 +87,7 @@ followUsers();
       await driver.findElement(By.className("btn btn-block")).click();
     }
   } finally {
+    await driver.quit();
     console.log("ENDED SESSION");
   }
 })();
