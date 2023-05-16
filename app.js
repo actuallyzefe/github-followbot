@@ -28,7 +28,7 @@ const findFollowings = async (username) => {
 };
 
 const followUsers = async () => {
-  findFollowings("--username-here--")
+  findFollowings("emirdmrgzr")
     .then((response) => {
       console.log(response);
     })
@@ -84,6 +84,15 @@ followUsers();
 
     for (let i = 0; i < follower_usernames.length; i++) {
       await driver.get(`https://github.com/${follower_usernames[i]}`);
+      const unfollowButton = await driver.findElement(
+        By.css("input[name='commit'][value='Unfollow']")
+      );
+
+      if (unfollowButton) {
+        i++;
+        continue;
+      }
+
       await driver.findElement(By.className("btn btn-block")).click();
     }
   } finally {
