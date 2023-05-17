@@ -27,7 +27,7 @@ const findFollowings = (username) => __awaiter(void 0, void 0, void 0, function*
         .then((data) => data.data);
     const dom = new jsdom_1.JSDOM(html);
     const nextLink = (_a = dom.window.document.querySelector(".pagination")) === null || _a === void 0 ? void 0 : _a.lastChild;
-    if (nextLink instanceof HTMLAnchorElement) {
+    if (nextLink) {
         const url = nextLink.href;
         try {
             console.log(url);
@@ -69,7 +69,7 @@ const findAlreadyfollowings = () => __awaiter(void 0, void 0, void 0, function* 
     return alreadyFollowing;
 });
 const followUsers = () => __awaiter(void 0, void 0, void 0, function* () {
-    findFollowings("--username-here--")
+    findFollowings("--user-name--here--")
         .then((response) => {
         console.log(response);
     })
